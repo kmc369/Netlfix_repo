@@ -2,7 +2,7 @@ from .db import db,environment,SCHEMA,add_prefix_for_prod
 from datetime import datetime
 
 
-class Movies(db.Model):
+class Movie(db.Model):
     __tablename__ = "movies"
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
@@ -20,13 +20,36 @@ class Movies(db.Model):
     
     # relationship
     user = db.relationship("User", back_populates="movies")
-    artist = db.relationship("Artist", back_populates="movies")
+    # artist = db.relationship("Artist", back_populates="movies")
     
     def add_prefix_for_prod(attr):
         if environment == "movies":
             return f"{SCHEMA}.{attr}"
         else:
             return attr
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'year':self.year,
+            'genre':self.genre,
+            'user': {
+                "id": self.user.id,
+                "username": self.user.username,
+                "email": self.user.email,
+                "image":self.user.image
+            }
+            # ,
+            # 'artist': {
+            #     "id": self.user.id,
+            #     "name":self.name
+                
+            # }
+            
+            
+            
+            
+        }
 
     
     
